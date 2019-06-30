@@ -1,0 +1,28 @@
+<div class="row justify-content-right">
+  <div class="col-4 searchbox">
+      <input class="form-control" [(ngModel)]="searchText" placeholder="search text goes here">
+  </div>
+</div>
+<div class="row">
+    <div class="col text-danger" *ngIf="(eventListing | filter: {eventName:searchText})?.length === 0">
+        "No results found!"
+      </div>
+  <div class="col-md-3 col-sm-6" *ngFor="let event of eventListing | filter : {eventName:searchText}">
+    <div class="card">
+      <figure>
+        <img class="card-img" [src]="event?.imageUrl" alt="Card image">
+        <span class="card-genre" [textContent]="event.category"></span>
+        <div class="event-action">
+            <a class="event-action-btn" [routerLink]="['/event-details', event.id]">{{event.availableSeats?'Book Now':'Sold Out'}}</a>
+          </div>
+      </figure>
+      <div class="card-body">
+        <p class="event-name" [textContent]="event.eventName"></p>
+        <p class="event-date" [textContent]="event.eventDate | date:'medium'"></p>
+        <p class="event-city" [textContent]="event.city"></p>
+        <p class="event-price" [textContent]="event.price | currency:'USD'"></p>
+        <p class="event-city" [textContent]="event.availableSeats"></p>
+      </div>
+    </div>
+  </div>
+</div>

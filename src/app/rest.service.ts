@@ -12,4 +12,8 @@ export class RestService {
     return this.http.get(url);
   }
 
+  updatedEvent(url, data){
+    return this.http.put(url, data);
+  }
+
 }

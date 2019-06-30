@@ -21,7 +21,9 @@
         <p class="event-date" [textContent]="event.eventDate | date:'medium'"></p>
         <p class="event-city" [textContent]="event.city"></p>
         <p class="event-price" [textContent]="event.price | currency:'USD'"></p>
-        <p class="event-city" [textContent]="event.availableSeats"></p>
+        <p class="event-seats">
+          <i>Seats</i><strong>{{event.availableSeats}}</strong>
+        </p>
       </div>
     </div>
   </div>

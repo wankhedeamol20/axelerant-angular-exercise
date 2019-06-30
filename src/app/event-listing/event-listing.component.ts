@@ -30,12 +30,4 @@ export class EventListingComponent implements OnInit {
     );
   }
 
-// filter(input){
-//     console.log(this.eventListing);
-//     this.eventListing = this.eventListing.filter((el)=>{
-//   // console.log(el.eventName.indexOf(input)>-1);
-//       return el.eventName.indexOf(input)>-1;
-//     });
-// }
-
 }

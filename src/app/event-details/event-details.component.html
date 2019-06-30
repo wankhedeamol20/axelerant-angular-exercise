@@ -1,25 +1,85 @@
-<div class="row">
+<div class="row event-details">
   <div class="col">
     <div class="card">
       <div class="card-header">
-        <h4 [textContent]="eventDetails.eventName"></h4>
+        <h4 [textContent]="eventDetails?.eventName"></h4>
       </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-5 col-sm-6">
-              <img class="card-img" [src]="eventDetails.imageUrl" alt="Card image">
+              <img class="card-img" *ngIf="eventDetails?.imageUrl" [src]="eventDetails.imageUrl" alt="Card image">
           </div>
           <div class="com-md-7 col-sm-6">
-            <p [innerHtml]="eventDetails.eventDescription"></p>
-            <p class="event-date" [textContent]="eventDetails.eventDate | date:'medium'"></p>
-            <p class="event-city" [textContent]="eventDetails.city"></p>
-            <p class="event-price" [textContent]="eventDetails.price | currency:'USD'"></p>
-            <p class="event-city" [textContent]="eventDetails.availableSeats"></p>
+            <p [innerHtml]="eventDetails?.eventDescription"></p>
+            <p class="event-date" [textContent]="eventDetails?.eventDate | date:'medium'"></p>
+            <p class="event-city" [textContent]="eventDetails?.city"></p>
+            <p class="event-price" [textContent]="eventDetails?.price | currency:'USD'"></p>
+            <p class="event-seats">
+              <i>Seats:</i> {{eventDetails?.availableSeats}} 
+            </p>
           </div>
         </div>
-        <form>
-
+        <form [formGroup]="bookingForm" novalidate class="m-t-15" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-sm-4 form-group">
+                <input type="text" formControlName="name" placeholder="Name" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Please enter your name</div>
+                    <div *ngIf="f.name.errors.pattern">Only letters and spaces are allowed</div>
+                </div>
+             
+            </div>
+            <div class="col-sm-4 form-group">
+                <input type="email" formControlName="email" placeholder="Email" class="form-control" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">Invalid email</div>
+                </div>
+              </div>
+            <div class="col-sm-4 form-group">
+              <input type="text" formControlName="phone" placeholder="Phone" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
+              <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                  <div *ngIf="f.phone.errors.required">Please enter your phone number</div>
+                  <div *ngIf="f.phone.errors.pattern">Please enter 10 digit phone number</div>
+                  
+              </div>
+            </div>
+            <div class="col-sm-6">
+                <select class="form-control" formControlName="numberOfSeats" (change)="checkSeat()" [ngClass]="{'is-invalid': selectedSeatValidator}">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                  </select>
+                  <div *ngIf="selectedSeatValidator" class="invalid-feedback">
+                      Number of seats selected is more than available seats
+                  </div>
+            </div>
+            <div class="col-sm-6">
+                <div formArrayName="attendees">
+                    <div class="form-group" *ngFor="let item of attendees.controls; let i=index;" [formGroupName]="i">
+                        <input type="text" formControlName="attendeesName" class="form-control" [ngClass]="{ 'is-invalid': submitted && item['controls'].attendeesName.errors }" />
+                        <div *ngIf="submitted && item['controls'].attendeesName.errors" class="invalid-feedback">
+                            <div *ngIf="item['controls'].attendeesName.errors.required">
+                                Please enter the name of Attendee {{i+1}}
+                            </div>
+                            <!-- “Only letters and spaces are allowed” -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <button *ngIf="submitBtn; else soldOut" type="submit" class="btn btn-primary">Submit</button>
+                <ng-template #soldOut>
+                    <button [disabled]="true" class="btn btn-primary">Sold Out</button>
+                </ng-template>
+                <a class="btn btn-light" [routerLink]="['event-listing']">Cancel</a>
+            </div>
+          </div>
         </form>
+        
+        
       </div>
     </div>
   </div>
